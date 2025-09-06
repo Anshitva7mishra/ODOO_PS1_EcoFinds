@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock, Loader, ShoppingBag, Leaf } from "lucide-react";
+import { Mail, Lock, Loader } from "lucide-react";
 import { Link } from "react-router-dom";
 import Input from "../components/Input";
 import { useAuthStore } from "../store/authStore";
@@ -17,86 +17,108 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0f0f0f] to-[#1a1a1a] p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-md mx-auto bg-[#333333]/50 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden relative z-10"
-      >
-        {/* Circle Logo */}
-        <div className="flex justify-center -mb-10 relative z-20">
-          <div className="w-20 h-20 rounded-full bg-[#333333]/70 backdrop-blur-xl border border-[#333333] flex items-center justify-center shadow-lg">
-            <div className="relative w-16 h-16 flex items-center justify-center">
-              <ShoppingBag className="w-16 h-16 text-[#007BFF]" />
-              <Leaf className="w-8 h-8 text-green-400 absolute bottom-0 right-0 rotate-12" />
-            </div>
-          </div>
-        </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="max-w-md w-full rounded-2xl shadow-xl overflow-hidden"
+      style={{
+        background: "linear-gradient(to bottom, #0f0f0f, #1a1a1a)",
+      }}
+    >
+      <div className="p-8 flex flex-col items-center">
+        {/* Title */}
+        <h2
+          className="text-3xl font-bold text-center bg-clip-text text-transparent"
+          style={{
+            backgroundImage: "linear-gradient(to right, #007BFF, #005FCC)",
+          }}
+        >
+          Welcome Back
+        </h2>
 
-        <div className="p-8">
-          <h2 className="text-3xl font-bold mb-6 text-center text-white">
-            Welcome Back
-          </h2>
+        {/* App Name */}
+        <p
+          className="text-xl font-bold text-center bg-clip-text text-transparent mt-1"
+          style={{
+            backgroundImage: "linear-gradient(to right, #007BFF, #005FCC)",
+          }}
+        >
+          EcoFinds
+        </p>
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <Input
-              icon={Mail}
-              type="email"
-              placeholder="Email Address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+        {/* Form */}
+        <form onSubmit={handleLogin} className="mt-6 w-full">
+          <Input
+            icon={Mail}
+            type="email"
+            placeholder="Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-            <Input
-              icon={Lock}
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+          <Input
+            icon={Lock}
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-            <div className="flex justify-end">
-              <Link
-                to="/forgot-password"
-                className="text-sm text-[#007BFF] hover:text-[#005FCC] focus:text-[#007BFF] underline"
-              >
-                Forgot password?
-              </Link>
-            </div>
-
-            {error && <p className="text-red-500 font-semibold">{error}</p>}
-
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full py-3 px-4 bg-[#007BFF] hover:bg-[#005FCC] text-white font-bold rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-[#007BFF] transition duration-200"
-              type="submit"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <Loader className="w-6 h-6 animate-spin mx-auto" />
-              ) : (
-                "Login"
-              )}
-            </motion.button>
-          </form>
-        </div>
-
-        {/* Footer with glass effect */}
-        <div className="px-8 py-4 bg-[#333333]/50 backdrop-blur-xl flex justify-center">
-          <p className="text-sm text-gray-400">
-            Don&apos;t have an account?{" "}
+          <div className="flex items-center mb-6">
             <Link
-              to="/signup"
-              className="text-[#007BFF] hover:text-[#005FCC] focus:text-[#007BFF] underline"
+              to="/forgot-password"
+              className="text-sm hover:underline"
+              style={{ color: "#007BFF" }}
             >
-              Sign up
+              Forgot password?
             </Link>
-          </p>
-        </div>
-      </motion.div>
-    </div>
+          </div>
+
+          {error && (
+            <p className="font-semibold mb-2" style={{ color: "#EF4444" }}>
+              {error}
+            </p>
+          )}
+
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full py-3 px-4 font-bold rounded-lg shadow-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+            style={{
+              background: "linear-gradient(to right, #007BFF, #005FCC)",
+              color: "#FFFFFF",
+              boxShadow: "0 4px 12px rgba(0, 123, 255, 0.3)",
+            }}
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <Loader className="w-6 h-6 animate-spin mx-auto" />
+            ) : (
+              "Login"
+            )}
+          </motion.button>
+        </form>
+      </div>
+
+      {/* Footer */}
+      <div
+        className="px-8 py-4 flex justify-center"
+        style={{ background: "#33333380" }}
+      >
+        <p className="text-sm" style={{ color: "#9CA3AF" }}>
+          Don&apos;t have an account?{" "}
+          <Link
+            to="/signup"
+            className="hover:underline"
+            style={{ color: "#007BFF" }}
+          >
+            Sign Up
+          </Link>
+        </p>
+      </div>
+    </motion.div>
   );
 };
 
