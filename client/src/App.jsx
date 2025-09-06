@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "./store/authStore";
 import { Toaster } from "react-hot-toast";
 
@@ -7,10 +7,10 @@ import { Toaster } from "react-hot-toast";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Products from "./pages/Products";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import Products from "./pages/Products";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
@@ -20,19 +20,21 @@ import MyPurchase from "./pages/MyPurchase";
 
 // ProtectedRoute → only for authenticated users
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, isCheckingAuth } = useAuthStore();
 
+  if (isCheckingAuth) return null; // wait until auth check finishes
   if (!isAuthenticated) return <Navigate to="/login" replace />;
-  if (!user?.isVerified) return <Navigate to="/verify-email" replace />;
+  if (!user?.is_verified) return <Navigate to="/verify-email" replace />;
 
   return children;
 };
 
-// RedirectAuthenticatedUser → stops logged-in users from visiting /login or /signup
+// RedirectAuthenticatedUser → stops logged-in & verified users from visiting /login or /signup
 const RedirectAuthenticatedUser = ({ children }) => {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, isCheckingAuth } = useAuthStore();
 
-  if (isAuthenticated && user?.isVerified) return <Navigate to="/" replace />;
+  if (isCheckingAuth) return null;
+  if (isAuthenticated && user?.is_verified) return <Navigate to="/" replace />;
 
   return children;
 };
@@ -44,16 +46,14 @@ const App = () => {
     checkAuth();
   }, [checkAuth]);
 
-  if (isCheckingAuth) return null; // nothing until auth check completes
+  if (isCheckingAuth) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] relative text-[#FFFFFF]">
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] relative text-white">
       <div className="flex items-center justify-center min-h-screen px-4">
         <Routes>
-          {/* Public route */}
+          {/* Public */}
           <Route path="/" element={<Home />} />
-
-          {/* Auth routes */}
           <Route
             path="/login"
             element={
@@ -70,11 +70,7 @@ const App = () => {
               </RedirectAuthenticatedUser>
             }
           />
-
-          {/* Email verification */}
           <Route path="/verify-email" element={<EmailVerificationPage />} />
-
-          {/* Password reset */}
           <Route
             path="/forgot-password"
             element={
@@ -92,7 +88,7 @@ const App = () => {
             }
           />
 
-          {/* Protected routes */}
+          {/* Protected */}
           <Route
             path="/products"
             element={
@@ -159,7 +155,7 @@ const App = () => {
       <Toaster
         toastOptions={{
           style: {
-            background: "#33333380", // same as bg-[#333333]/50
+            background: "#33333380",
             backdropFilter: "blur(10px)",
             color: "#FFFFFF",
           },

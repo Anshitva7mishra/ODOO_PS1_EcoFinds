@@ -4,6 +4,7 @@ import { useAuthStore } from "../store/authStore";
 import Input from "../components/Input";
 import { ArrowLeft, Loader, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -13,8 +14,13 @@ const ForgotPasswordPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await forgotPassword(email);
-    setIsSubmitted(true);
+    try {
+      await forgotPassword(email);
+      setIsSubmitted(true);
+      toast.success("Reset link sent! Check your email.");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to send reset link");
+    }
   };
 
   return (
@@ -52,6 +58,7 @@ const ForgotPasswordPage = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              autoComplete="email"
             />
 
             <motion.button

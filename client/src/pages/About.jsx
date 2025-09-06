@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-
-function About() {
-  return (
-    <div>About</div>
-  )
-}
-
-export default About
-=======
 import React from "react";
 import {
   Users,
@@ -153,4 +142,4 @@ function StatBox({ number, label }) {
     </div>
   );
 }
->>>>>>> origin/Hariom
+
