@@ -21,16 +21,8 @@ const Products = () => {
         const res = await axios.get("https://fakestoreapi.com/products");
         setProducts(res.data);
 
-        // ✅ More fake brands for demo
-        const fakeBrands = [
-          "EcoMax",
-          "Greenify",
-          "NaturePro",
-          "BioLife",
-          "EcoCo",
-          "GreenLife",
-          "NaturePure",
-        ];
+        // Dummy brands for demo
+        const fakeBrands = ["EcoMax", "Greenify", "NaturePro", "BioLife", "EcoCo"];
         setBrands(fakeBrands);
       } catch (err) {
         console.error("Error fetching products:", err);
@@ -43,10 +35,11 @@ const Products = () => {
     const matchSearch = item.title.toLowerCase().includes(search.toLowerCase());
     const matchCategory = category ? item.category === category : true;
     const matchPrice = item.price >= priceRange[0] && item.price <= priceRange[1];
+    // Simple brand filter: assign brand based on id for demo
+    const brandIndex = item.id % brands.length;
     const matchBrand =
-      selectedBrands.length > 0
-        ? selectedBrands.includes(item.id % brands.length)
-        : true;
+      selectedBrands.length > 0 ? selectedBrands.includes(brandIndex) : true;
+
     return matchSearch && matchCategory && matchPrice && matchBrand;
   });
 
@@ -55,13 +48,8 @@ const Products = () => {
   const currentProducts = filteredProducts.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
-  const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-  };
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  };
-
+  const handlePrev = () => currentPage > 1 && setCurrentPage(currentPage - 1);
+  const handleNext = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
   const handleReset = () => {
     setSearch("");
     setCategory("");
@@ -71,7 +59,7 @@ const Products = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f0f0f] to-[#1a1a1a] text-white flex">
-      {/* Sidebar Filters */}
+      {/* Sidebar */}
       <div className="w-64 p-6 border-r border-gray-700">
         <h2 className="text-xl font-semibold mb-4">Filters</h2>
 
@@ -94,9 +82,6 @@ const Products = () => {
           <option value="women's clothing">Women’s Clothing</option>
           <option value="jewelery">Jewelery</option>
           <option value="electronics">Electronics</option>
-          <option value="bags">Bags</option>
-          <option value="bottles">Bottles</option>
-          <option value="lights">Lights</option>
         </select>
 
         <h3 className="font-semibold mb-2">Price</h3>
@@ -116,13 +101,11 @@ const Products = () => {
             <input
               type="checkbox"
               checked={selectedBrands.includes(index)}
-              onChange={() => {
-                if (selectedBrands.includes(index)) {
-                  setSelectedBrands(selectedBrands.filter((b) => b !== index));
-                } else {
-                  setSelectedBrands([...selectedBrands, index]);
-                }
-              }}
+              onChange={() =>
+                selectedBrands.includes(index)
+                  ? setSelectedBrands(selectedBrands.filter((b) => b !== index))
+                  : setSelectedBrands([...selectedBrands, index])
+              }
               className="mr-2"
             />
             {brand}
@@ -153,9 +136,7 @@ const Products = () => {
                   alt={product.title}
                   className="h-40 w-full object-contain mb-3"
                 />
-                <h3 className="text-sm font-semibold line-clamp-2">
-                  {product.title}
-                </h3>
+                <h3 className="text-sm font-semibold line-clamp-2">{product.title}</h3>
                 <p className="text-gray-400 text-sm">${product.price}</p>
                 <button
                   onClick={() => addToCart(product)}

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { getData } from "../context/DataCOntext";
+import { getData } from "../context/DataContext";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
@@ -70,20 +70,23 @@ const Carousel = () => {
   };
 
   return (
-    <div className="overflow-hidden relative bg-gradient-to-b from-[#0f0f0f] to-[#1a1a1a] py-12">
+    <div className="overflow-hidden relative bg-gradient-to-b from-[#0f0f0f] to-[#1a1a1a] min-h-[80vh]">
       <Slider {...settings}>
         {data?.slice(0, 7)?.map((item, index) => (
-          <div key={item.id || index} className="w-full flex justify-center items-center">
-            <div className="flex flex-col-reverse md:flex-row gap-8 justify-between items-center px-6 md:px-16">
+          <div
+            key={item.id || index}
+            className="w-full flex justify-center items-center h-[80vh]"
+          >
+            <div className="flex flex-col-reverse md:flex-row gap-8 justify-between items-center px-6 md:px-16 h-full">
               {/* Text */}
               <div className="w-full md:w-1/2 text-center md:text-left space-y-3">
                 <h3 className="text-[#007BFF] font-semibold text-sm md:text-base">
                   Powering Your World with the Best in Electronics
                 </h3>
-                <h1 className="text-lg md:text-2xl font-bold uppercase text-[#FFFFFF]">
+                <h1 className="text-lg md:text-4xl font-bold uppercase text-[#FFFFFF]">
                   {item.title}
                 </h1>
-                <p className="text-[#9CA3AF] text-sm md:text-base">
+                <p className="text-[#9CA3AF] text-sm md:text-lg">
                   {item.description}
                 </p>
                 <button className="bg-[#007BFF] hover:bg-[#005FCC] text-white px-4 py-2 rounded-md mt-2 transition-colors">
@@ -96,7 +99,7 @@ const Carousel = () => {
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="rounded-full w-44 h-44 md:w-64 md:h-64 object-cover hover:scale-105 transition-transform shadow-xl shadow-[#333333]/50"
+                  className="rounded-full w-44 h-44 md:w-72 md:h-72 object-cover hover:scale-105 transition-transform shadow-xl shadow-[#333333]/50"
                 />
               </div>
             </div>

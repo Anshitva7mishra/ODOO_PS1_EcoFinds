@@ -3,27 +3,26 @@ import { NavLink, Link } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 import { IoCartOutline } from "react-icons/io5";
 import { useEffect, useRef, useState } from "react";
+import { useCart } from "../context/CartContext"; // Import CartContext
 
-const Navbar = ({
-  location = null,
-  getLocation = () => {},
-  openDropdown = false,
-  setOpenDropdown = () => {},
-}) => {
+const Navbar = ({ location = null }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const { cartCount } = useCart(); // Get cart count from context
 
-  const toggleDropdown = () => setOpenDropdown(!openDropdown);
+  const toggleDropdown = () => {
+    if (dropdownRef.current) dropdownRef.current.classList.toggle("hidden");
+  };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setOpenDropdown(false);
+        dropdownRef.current.classList.add("hidden");
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [setOpenDropdown]);
+  }, []);
 
   return (
     <header className="bg-gradient-to-b from-[#0f0f0f] to-[#1a1a1a] py-3 shadow-2xl text-white">
@@ -41,7 +40,7 @@ const Navbar = ({
             </span>
           </NavLink>
 
-          {/* Desktop location next to logo */}
+          {/* Desktop location */}
           {location && (
             <div
               onClick={toggleDropdown}
@@ -58,7 +57,7 @@ const Navbar = ({
           )}
         </div>
 
-        {/* Desktop Menu + Cart + Sign In */}
+        {/* Desktop Menu + Cart */}
         <nav className="hidden md:flex gap-8 items-center">
           <ul className="flex gap-6 items-center text-lg font-semibold">
             {["Home", "Products", "About", "Contact"].map((p) => (
@@ -66,7 +65,9 @@ const Navbar = ({
                 key={p}
                 to={`/${p.toLowerCase() === "home" ? "" : p.toLowerCase()}`}
                 className={({ isActive }) =>
-                  `${isActive ? "border-b-4 border-[#007BFF]" : "text-white/70"} cursor-pointer`
+                  `${
+                    isActive ? "border-b-4 border-[#007BFF]" : "text-white/70"
+                  } cursor-pointer`
                 }
               >
                 <li>{p}</li>
@@ -81,9 +82,11 @@ const Navbar = ({
               className="relative p-2 hover:text-[#007BFF] transition-colors duration-200"
             >
               <IoCartOutline className="h-8 w-8" />
-              <span className="bg-[#007BFF] px-3 py-1 rounded-full absolute -top-3 -right-3 text-white text-sm font-semibold">
-                0
-              </span>
+              {cartCount > 0 && (
+                <span className="bg-[#007BFF] px-3 py-1 rounded-full absolute -top-3 -right-3 text-white text-sm font-semibold">
+                  {cartCount}
+                </span>
+              )}
             </Link>
 
             <Link
@@ -101,66 +104,46 @@ const Navbar = ({
           className="md:hidden p-2 rounded-md focus:outline-none"
           aria-label="Toggle menu"
         >
-          {mobileOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
+          {mobileOpen ? (
+            <FiX className="w-6 h-6" />
+          ) : (
+            <FiMenu className="w-6 h-6" />
+          )}
         </button>
       </div>
 
       {/* Mobile Menu */}
-      <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out`}
-        style={{ maxHeight: mobileOpen ? "500px" : "0" }}
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 pb-4 flex flex-col gap-4">
-          <ul className="flex flex-col gap-3 text-lg font-semibold">
-            <NavLink to="/" onClick={() => setMobileOpen(false)}>
-              <li>Home</li>
-            </NavLink>
-            <NavLink to="/products" onClick={() => setMobileOpen(false)}>
-              <li>Products</li>
-            </NavLink>
-            <NavLink to="/about" onClick={() => setMobileOpen(false)}>
-              <li>About</li>
-            </NavLink>
-            <NavLink to="/contact" onClick={() => setMobileOpen(false)}>
-              <li>Contact</li>
-            </NavLink>
-          </ul>
-
-          {/* Mobile location */}
-          {location && (
-            <div
-              onClick={toggleDropdown}
-              className="flex items-center gap-2 cursor-pointer mt-2"
+      {mobileOpen && (
+        <div className="md:hidden px-4 pb-4 flex flex-col gap-3">
+          {["Home", "Products", "About", "Contact"].map((p) => (
+            <NavLink
+              key={p}
+              to={`/${p.toLowerCase() === "home" ? "" : p.toLowerCase()}`}
+              onClick={() => setMobileOpen(false)}
+              className="text-lg font-semibold text-white"
             >
-              <MapPin className="text-[#007BFF]" />
-              <span className="font-semibold text-white text-sm sm:text-base">
-                <div className="-space-y-1">
-                  <p>{location.county}</p>
-                  <p>{location.state}</p>
-                </div>
-              </span>
-            </div>
-          )}
+              {p}
+            </NavLink>
+          ))}
 
-          {/* Cart + Sign In (mobile) */}
-          <div className="flex items-center gap-8 mt-2">
-            <Link
-              to="/cart"
-              className="inline-flex items-center gap-2 p-2 hover:text-[#007BFF] transition-colors duration-200"
-            >
-              <IoCartOutline className="h-7 w-7" />
-              <span>Cart (0)</span>
-            </Link>
+          <Link
+            to="/cart"
+            className="flex items-center gap-2 p-2 hover:text-[#007BFF]"
+          >
+            <IoCartOutline className="h-7 w-7" /> Cart{" "}
+            <span className="bg-[#007BFF] px-3 py-1 rounded-full absolute -top-3 -right-3 text-white text-sm font-semibold">
+              {cartCount}
+            </span>
+          </Link>
 
-            <Link
-              to="/signin"
-              className="px-4 py-1 bg-[#007BFF] rounded-md text-white hover:bg-[#0066CC] transition-all duration-200 text-base font-medium"
-            >
-              Sign In
-            </Link>
-          </div>
+          <Link
+            to="/signin"
+            className="px-4 py-1 bg-[#007BFF] rounded-md text-white hover:bg-[#0066CC] transition-all duration-200 text-base font-medium"
+          >
+            Sign In
+          </Link>
         </div>
-      </div>
+      )}
     </header>
   );
 };
