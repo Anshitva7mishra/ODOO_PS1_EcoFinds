@@ -1,29 +1,28 @@
-import { ShoppingBag, Leaf, MapPin } from "lucide-react";
+import { ShoppingBag, Leaf, MapPin, UserCog } from "lucide-react";
 import { NavLink, Link } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 import { IoCartOutline } from "react-icons/io5";
 import { useEffect, useRef, useState } from "react";
+import { useCart } from "../context/CartContext";
+import { useAuthStore } from "../store/authStore"; // <-- Zustand store
 
-const Navbar = ({
-  location = null,
-  getLocation = () => {},
-  openDropdown = false,
-  setOpenDropdown = () => {},
-}) => {
+const Navbar = ({ location = null }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const toggleDropdown = () => setOpenDropdown(!openDropdown);
+  const { cartCount } = useCart();
+  const { user, isAuthenticated, logout } = useAuthStore();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setOpenDropdown(false);
+        setProfileOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [setOpenDropdown]);
+  }, []);
 
   return (
     <header className="bg-gradient-to-b from-[#0f0f0f] to-[#1a1a1a] py-3 shadow-2xl text-white">
@@ -41,10 +40,10 @@ const Navbar = ({
             </span>
           </NavLink>
 
-          {/* Desktop location next to logo */}
+          {/* Desktop location */}
           {location && (
             <div
-              onClick={toggleDropdown}
+              onClick={() => setProfileOpen(false)}
               className="hidden md:flex items-center gap-1 cursor-pointer relative"
             >
               <MapPin className="text-[#007BFF]" />
@@ -58,7 +57,7 @@ const Navbar = ({
           )}
         </div>
 
-        {/* Desktop Menu + Cart + Sign In */}
+        {/* Desktop Menu + Cart */}
         <nav className="hidden md:flex gap-8 items-center">
           <ul className="flex gap-6 items-center text-lg font-semibold">
             {["Home", "Products", "About", "Contact"].map((p) => (
@@ -66,7 +65,9 @@ const Navbar = ({
                 key={p}
                 to={`/${p.toLowerCase() === "home" ? "" : p.toLowerCase()}`}
                 className={({ isActive }) =>
-                  `${isActive ? "border-b-4 border-[#007BFF]" : "text-white/70"} cursor-pointer`
+                  `${
+                    isActive ? "border-b-4 border-[#007BFF]" : "text-white/70"
+                  } cursor-pointer`
                 }
               >
                 <li>{p}</li>
@@ -74,24 +75,60 @@ const Navbar = ({
             ))}
           </ul>
 
-          {/* Cart + Sign In */}
-          <div className="flex items-center gap-8">
+          {/* Cart + Profile/Auth */}
+          <div className="flex items-center gap-8 relative">
+            {/* Cart */}
             <Link
               to="/cart"
               className="relative p-2 hover:text-[#007BFF] transition-colors duration-200"
             >
               <IoCartOutline className="h-8 w-8" />
-              <span className="bg-[#007BFF] px-3 py-1 rounded-full absolute -top-3 -right-3 text-white text-sm font-semibold">
-                0
-              </span>
+              {cartCount > 0 && (
+                <span className="bg-[#007BFF] px-3 py-1 rounded-full absolute -top-3 -right-3 text-white text-sm font-semibold">
+                  {cartCount}
+                </span>
+              )}
             </Link>
 
-            <Link
-              to="/signin"
-              className="px-4 py-1 bg-[#007BFF] rounded-md text-white hover:bg-[#0066CC] transition-all duration-200 text-base font-medium"
-            >
-              Sign In
-            </Link>
+            {/* Profile / Sign In */}
+            {isAuthenticated ? (
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setProfileOpen((prev) => !prev)}
+                  className="w-10 h-10 rounded-full bg-[#007BFF] flex items-center justify-center hover:bg-[#0066CC] transition"
+                >
+                  <UserCog className="text-white w-6 h-6" />
+                </button>
+
+                {profileOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg overflow-hidden z-50">
+                    <div className="px-4 py-2 border-b">
+                      <p className="font-semibold">{user?.name}</p>
+                      <p className="text-sm text-gray-600">{user?.email}</p>
+                    </div>
+                    <Link
+                      to="/dashboard"
+                      className="block px-4 py-2 hover:bg-gray-100"
+                    >
+                      User Dashboard
+                    </Link>
+                    <button
+                      onClick={logout}
+                      className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="px-4 py-1 bg-[#007BFF] rounded-md text-white hover:bg-[#0066CC] transition-all duration-200 text-base font-medium"
+              >
+                Sign In
+              </Link>
+            )}
           </div>
         </nav>
 
@@ -101,66 +138,69 @@ const Navbar = ({
           className="md:hidden p-2 rounded-md focus:outline-none"
           aria-label="Toggle menu"
         >
-          {mobileOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
+          {mobileOpen ? (
+            <FiX className="w-6 h-6" />
+          ) : (
+            <FiMenu className="w-6 h-6" />
+          )}
         </button>
       </div>
 
       {/* Mobile Menu */}
-      <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out`}
-        style={{ maxHeight: mobileOpen ? "500px" : "0" }}
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 pb-4 flex flex-col gap-4">
-          <ul className="flex flex-col gap-3 text-lg font-semibold">
-            <NavLink to="/" onClick={() => setMobileOpen(false)}>
-              <li>Home</li>
-            </NavLink>
-            <NavLink to="/products" onClick={() => setMobileOpen(false)}>
-              <li>Products</li>
-            </NavLink>
-            <NavLink to="/about" onClick={() => setMobileOpen(false)}>
-              <li>About</li>
-            </NavLink>
-            <NavLink to="/contact" onClick={() => setMobileOpen(false)}>
-              <li>Contact</li>
-            </NavLink>
-          </ul>
-
-          {/* Mobile location */}
-          {location && (
-            <div
-              onClick={toggleDropdown}
-              className="flex items-center gap-2 cursor-pointer mt-2"
+      {mobileOpen && (
+        <div className="md:hidden px-4 pb-4 flex flex-col gap-3">
+          {["Home", "Products", "About", "Contact"].map((p) => (
+            <NavLink
+              key={p}
+              to={`/${p.toLowerCase() === "home" ? "" : p.toLowerCase()}`}
+              onClick={() => setMobileOpen(false)}
+              className="text-lg font-semibold text-white"
             >
-              <MapPin className="text-[#007BFF]" />
-              <span className="font-semibold text-white text-sm sm:text-base">
-                <div className="-space-y-1">
-                  <p>{location.county}</p>
-                  <p>{location.state}</p>
-                </div>
+              {p}
+            </NavLink>
+          ))}
+
+          {/* Cart */}
+          <Link
+            to="/cart"
+            className="flex items-center gap-2 p-2 hover:text-[#007BFF]"
+          >
+            <IoCartOutline className="h-7 w-7" /> Cart{" "}
+            {cartCount > 0 && (
+              <span className="bg-[#007BFF] px-3 py-1 rounded-full text-white text-sm font-semibold">
+                {cartCount}
               </span>
+            )}
+          </Link>
+
+          {/* Mobile Profile / Sign In */}
+          {isAuthenticated ? (
+            <div className="flex flex-col gap-2 mt-2 bg-gray-900 p-3 rounded-lg">
+              <p className="font-semibold">{user?.name}</p>
+              <p className="text-sm text-gray-400">{user?.email}</p>
+              <Link
+                to="/dashboard"
+                className="px-3 py-2 rounded-md bg-[#007BFF] text-white text-center"
+              >
+                User Dashboard
+              </Link>
+              <button
+                onClick={logout}
+                className="px-3 py-2 rounded-md bg-red-600 text-white text-center"
+              >
+                Logout
+              </button>
             </div>
-          )}
-
-          {/* Cart + Sign In (mobile) */}
-          <div className="flex items-center gap-8 mt-2">
+          ) : (
             <Link
-              to="/cart"
-              className="inline-flex items-center gap-2 p-2 hover:text-[#007BFF] transition-colors duration-200"
-            >
-              <IoCartOutline className="h-7 w-7" />
-              <span>Cart (0)</span>
-            </Link>
-
-            <Link
-              to="/signin"
+              to="/login"
               className="px-4 py-1 bg-[#007BFF] rounded-md text-white hover:bg-[#0066CC] transition-all duration-200 text-base font-medium"
             >
               Sign In
             </Link>
-          </div>
+          )}
         </div>
-      </div>
+      )}
     </header>
   );
 };

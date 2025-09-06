@@ -1,6 +1,11 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { FaFacebook, FaInstagram, FaPinterest, FaTwitterSquare } from 'react-icons/fa'
+import React from "react";
+import { Link } from "react-router-dom";
+import {
+  FaFacebook,
+  FaInstagram,
+  FaPinterest,
+  FaTwitterSquare,
+} from "react-icons/fa";
 
 const Footers = () => {
   return (
@@ -79,7 +84,7 @@ const Footers = () => {
         </p>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footers
+export default Footers;

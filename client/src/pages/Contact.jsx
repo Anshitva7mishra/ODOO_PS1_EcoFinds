@@ -7,7 +7,6 @@ import {
   Send,
   ChevronDown,
   ChevronUp,
-  ArrowLeft,
   MapPin,
   Clock,
 } from "lucide-react";
@@ -148,14 +147,18 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a]">
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+          <h1
+            className="text-4xl md:text-6xl font-bold text-center bg-clip-text text-transparent"
+            style={{
+              backgroundImage: "linear-gradient(to right, #007BFF, #005FCC)",
+            }}
+          >
             Contact Us
           </h1>
-          <p className="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+          <p className="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mt-4">
             We're here to help you make sustainable shopping easier. Whether
             you're buying, selling, or just have questions about our platform,
             our team is ready to assist you.
@@ -175,9 +178,7 @@ export default function Contact() {
               <h3 className="text-white font-semibold text-lg mb-2">
                 {method.title}
               </h3>
-              <p className="text-gray-400 text-sm mb-4">
-                {method.description}
-              </p>
+              <p className="text-gray-400 text-sm mb-4">{method.description}</p>
               <div className="space-y-2">
                 <p className="text-white font-medium">{method.contact}</p>
                 <p className="text-gray-500 text-xs">{method.response}</p>
@@ -210,9 +211,7 @@ export default function Contact() {
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) =>
-                      handleInputChange("name", e.target.value)
-                    }
+                    onChange={(e) => handleInputChange("name", e.target.value)}
                     placeholder="Your full name"
                     className={`w-full bg-white/5 border ${
                       errors.name ? "border-red-500" : "border-white/20"
@@ -230,9 +229,7 @@ export default function Contact() {
                   <input
                     type="email"
                     value={formData.email}
-                    onChange={(e) =>
-                      handleInputChange("email", e.target.value)
-                    }
+                    onChange={(e) => handleInputChange("email", e.target.value)}
                     placeholder="your@email.com"
                     className={`w-full bg-white/5 border ${
                       errors.email ? "border-red-500" : "border-white/20"
@@ -250,9 +247,7 @@ export default function Contact() {
                 </label>
                 <select
                   value={formData.subject}
-                  onChange={(e) =>
-                    handleInputChange("subject", e.target.value)
-                  }
+                  onChange={(e) => handleInputChange("subject", e.target.value)}
                   className={`w-full bg-white/5 border ${
                     errors.subject ? "border-red-500" : "border-white/20"
                   } rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#007BFF] transition-colors`}
@@ -287,9 +282,7 @@ export default function Contact() {
                 </label>
                 <textarea
                   value={formData.message}
-                  onChange={(e) =>
-                    handleInputChange("message", e.target.value)
-                  }
+                  onChange={(e) => handleInputChange("message", e.target.value)}
                   placeholder="Tell us how we can help you..."
                   rows={6}
                   className={`w-full bg-white/5 border ${
@@ -297,9 +290,7 @@ export default function Contact() {
                   } rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-[#007BFF] transition-colors resize-none`}
                 />
                 {errors.message && (
-                  <p className="text-red-400 text-sm mt-1">
-                    {errors.message}
-                  </p>
+                  <p className="text-red-400 text-sm mt-1">{errors.message}</p>
                 )}
               </div>
 

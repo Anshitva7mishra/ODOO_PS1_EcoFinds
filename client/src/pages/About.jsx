@@ -19,12 +19,14 @@ export default function About() {
             EcoFinds
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-6 sm:mb-8">
-            Discover, Share, Sustain - Your Marketplace for Second-Hand Treasures
+            Discover, Share, Sustain - Your Marketplace for Second-Hand
+            Treasures
           </p>
           <div className="bg-[#333333]/50 backdrop-blur rounded-2xl p-6 sm:p-8 border border-white/10">
             <p className="text-base sm:text-lg text-gray-400 leading-relaxed">
-              Building a circular economy through trusted peer-to-peer marketplace for pre-owned goods, 
-              where every purchase makes a positive environmental impact.
+              Building a circular economy through trusted peer-to-peer
+              marketplace for pre-owned goods, where every purchase makes a
+              positive environmental impact.
             </p>
           </div>
         </div>
@@ -35,12 +37,16 @@ export default function About() {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             <Card
-              icon={<Heart className="w-6 sm:w-8 h-6 sm:h-8 text-[#007BFF] mr-3 sm:mr-4" />}
+              icon={
+                <Heart className="w-6 sm:w-8 h-6 sm:h-8 text-[#007BFF] mr-3 sm:mr-4" />
+              }
               title="Our Mission"
               text="To create a sustainable marketplace that empowers individuals to give pre-owned items a second life, reducing waste and promoting conscious consumption while building a community of environmentally-minded users."
             />
             <Card
-              icon={<Recycle className="w-6 sm:w-8 h-6 sm:h-8 text-[#007BFF] mr-3 sm:mr-4" />}
+              icon={
+                <Recycle className="w-6 sm:w-8 h-6 sm:h-8 text-[#007BFF] mr-3 sm:mr-4" />
+              }
               title="Our Vision"
               text="To become the leading platform for sustainable commerce, where buying second-hand is the first choice, creating a circular economy that benefits both people and the planet."
             />
@@ -55,12 +61,42 @@ export default function About() {
             Platform Features
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <FeatureCard icon={<Users className="w-5 sm:w-6 h-5 sm:h-6 text-[#007BFF]" />} title="User Profiles" text="Secure authentication and personalized profiles for buyers and sellers" />
-            <FeatureCard icon={<ShoppingBag className="w-5 sm:w-6 h-5 sm:h-6 text-[#007BFF]" />} title="Product Management" text="Easy listing creation, editing, and management for your items" />
-            <FeatureCard icon={<Search className="w-5 sm:w-6 h-5 sm:h-6 text-[#007BFF]" />} title="Smart Search" text="Advanced filtering and category-based discovery system" />
-            <FeatureCard icon={<ShoppingBag className="w-5 sm:w-6 h-5 sm:h-6 text-[#007BFF]" />} title="Shopping Cart" text="Seamless purchasing experience with cart and order history" />
-            <FeatureCard icon={<Shield className="w-5 sm:w-6 h-5 sm:h-6 text-[#007BFF]" />} title="Secure Transactions" text="Safe and reliable payment processing with buyer protection" />
-            <FeatureCard icon={<Recycle className="w-5 sm:w-6 h-5 sm:h-6 text-[#007BFF]" />} title="Sustainability Focus" text="Promoting circular economy and environmental consciousness" />
+            <FeatureCard
+              icon={<Users className="w-5 sm:w-6 h-5 sm:h-6 text-[#007BFF]" />}
+              title="User Profiles"
+              text="Secure authentication and personalized profiles for buyers and sellers"
+            />
+            <FeatureCard
+              icon={
+                <ShoppingBag className="w-5 sm:w-6 h-5 sm:h-6 text-[#007BFF]" />
+              }
+              title="Product Management"
+              text="Easy listing creation, editing, and management for your items"
+            />
+            <FeatureCard
+              icon={<Search className="w-5 sm:w-6 h-5 sm:h-6 text-[#007BFF]" />}
+              title="Smart Search"
+              text="Advanced filtering and category-based discovery system"
+            />
+            <FeatureCard
+              icon={
+                <ShoppingBag className="w-5 sm:w-6 h-5 sm:h-6 text-[#007BFF]" />
+              }
+              title="Shopping Cart"
+              text="Seamless purchasing experience with cart and order history"
+            />
+            <FeatureCard
+              icon={<Shield className="w-5 sm:w-6 h-5 sm:h-6 text-[#007BFF]" />}
+              title="Secure Transactions"
+              text="Safe and reliable payment processing with buyer protection"
+            />
+            <FeatureCard
+              icon={
+                <Recycle className="w-5 sm:w-6 h-5 sm:h-6 text-[#007BFF]" />
+              }
+              title="Sustainability Focus"
+              text="Promoting circular economy and environmental consciousness"
+            />
           </div>
         </div>
       </section>
@@ -89,7 +125,8 @@ export default function About() {
               Join the Sustainable Revolution
             </h2>
             <p className="text-base sm:text-xl text-gray-300 mb-6 sm:mb-8">
-              Be part of a community that values sustainability, quality, and conscious consumption.
+              Be part of a community that values sustainability, quality, and
+              conscious consumption.
             </p>
             <a
               href="/"
@@ -113,7 +150,9 @@ function Card({ icon, title, text }) {
         {icon}
         <h2 className="text-2xl sm:text-3xl font-bold">{title}</h2>
       </div>
-      <p className="text-gray-400 text-sm sm:text-base leading-relaxed">{text}</p>
+      <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
+        {text}
+      </p>
     </div>
   );
 }
@@ -123,7 +162,9 @@ function FeatureCard({ icon, title, text }) {
   return (
     <div className="bg-[#333333]/50 backdrop-blur rounded-xl p-5 sm:p-6 border border-white/10 hover:border-[#007BFF]/30 transition-all duration-300 group">
       <div className="flex items-center mb-3 sm:mb-4">
-        <div className="mr-2 sm:mr-3 group-hover:scale-110 transition-transform">{icon}</div>
+        <div className="mr-2 sm:mr-3 group-hover:scale-110 transition-transform">
+          {icon}
+        </div>
         <h3 className="text-lg sm:text-xl font-semibold">{title}</h3>
       </div>
       <p className="text-gray-400 text-sm sm:text-base">{text}</p>
@@ -142,4 +183,3 @@ function StatBox({ number, label }) {
     </div>
   );
 }
-
