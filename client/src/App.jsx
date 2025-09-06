@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "./store/authStore";
 import { Toaster } from "react-hot-toast";
+import axios from "axios";
 
 // Pages
 import Home from "./pages/Home";
@@ -17,6 +18,10 @@ import Cart from "./pages/Cart";
 import UserDashboard from "./pages/UserDashboard";
 import MyListing from "./pages/MyListing";
 import MyPurchase from "./pages/MyPurchase";
+
+// Components
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 // ProtectedRoute → only for authenticated users
 const ProtectedRoute = ({ children }) => {
@@ -42,14 +47,47 @@ const RedirectAuthenticatedUser = ({ children }) => {
 const App = () => {
   const { checkAuth, isCheckingAuth } = useAuthStore();
 
+  // ------------------ ADDED LOCATION LOGIC ------------------
+  const [location, setLocation] = useState(null);
+  const [openDropdown, setOpenDropdown] = useState(false);
+
+  const getLocation = async () => {
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const { latitude, longitude } = pos.coords;
+      console.log(latitude, longitude);
+
+      const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+
+      try {
+        const response = await axios.get(url);
+        const exactLocation = response.data.address;
+        setLocation(exactLocation);
+        setOpenDropdown(false);
+        console.log(exactLocation);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  };
+
   useEffect(() => {
     checkAuth();
+    getLocation();
   }, [checkAuth]);
+  // ------------------------------------------------------------
 
   if (isCheckingAuth) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] relative text-white">
+      {/* Navbar with location props */}
+      <Navbar
+        location={location}
+        getLocation={getLocation}
+        openDropdown={openDropdown}
+        setOpenDropdown={setOpenDropdown}
+      />
+
       <div className="flex items-center justify-center min-h-screen px-4">
         <Routes>
           {/* Public */}
@@ -150,6 +188,9 @@ const App = () => {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
+
+      {/* Footer */}
+      <Footer />
 
       {/* Notifications */}
       <Toaster

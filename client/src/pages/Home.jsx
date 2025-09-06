@@ -1,9 +1,20 @@
-import React from 'react'
+import React from "react";
+import Carousel from "../components/Carousel";
+import Features from "../components/Features";
+import MidBanner from "../components/MidBanner";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Navbar";
 
-function Home() {
+const Home = () => {
   return (
-    <div>Home</div>
-  )
-}
+    <div>
+      <Navbar />
+      <Carousel />
+      <MidBanner />
+      <Features />
+      <Footer />
+    </div>
+  );
+};
 
-export default Home
+export default Home;
